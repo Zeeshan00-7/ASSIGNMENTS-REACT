@@ -1,14 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
-import Fetching from './components/fetch';
+import UserCard from "./components/card";
+import React from "react";
+import { useState, useEffect} from "react";
+import './App.css'
 
-function App() {
+export default function App() {
+  const [users, setUsers] = useState([]);
+
+  const handleUsers = async () => {
+    try {
+      const response = await fetch('https://reqres.in/api/users/');
+      const data = await response.json();
+      setUsers(data.data);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    }
+  };
+
   return (
-    <div className="App">
-     
-        <Fetching/>
+    <div>
+      <button className='bttn' onClick={handleUsers}>Get Users</button>
+      <div className="user-card-container">
+        {users.map((user) => (
+          <UserCard key={user.id} user={user} />
+        ))}
+      </div>
     </div>
   );
 }
 
-export default App;
